@@ -22,7 +22,7 @@ env:
 jobs:
   test-matrix:
     name: "Test on ${{matrix.os}} with python ${{matrix.python}} sphinx~=${{matrix.sphinx}}"
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false  # Set on "false" to get the results of ALL builds
       matrix:
@@ -35,17 +35,17 @@ jobs:
           sphinx: "8.2"
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python ${{matrix.python}}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python }}
+          python-version: ${{matrix.python}}
       - name: print versions for debugging
         run: python --version ; pip --version ; whoami
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install setuptools
-          python -m pip install sphinx~=${{ matrix.sphinx }}
+          python -m pip install sphinx~=${{matrix.sphinx}}
           python -m pip install -r ./tests/requirements.txt
           python -m pip install .
       - name: Test with pytest
@@ -87,27 +87,27 @@ jobs:
       - name: Download test-results
         uses: actions/download-artifact@v4
         with:
-          path: public
+          path: test-results
           pattern: test-results-*
           merge-multiple: true
       - name: Print test-result folder
         run: |
-          ls -R public
+          ls -R test-results
         if: ${{ always() }}
       - name: Merge coverage files
         run: >
           coverage combine
-          --data-file=./public/coverage.file
+          --data-file=./public/coverage.merged.file
           --keep
-          ./public/coverage.*.file
-      - name: Print test-result folder 2
+          ./test-results/coverage.*.file
+      - name: Print public folder
         run: |
           ls -R public
         if: ${{ always() }}
       - name: Merge test-result xml
         run: |
-          junitparser merge ./public/test_results.*.xml ./public/test_results.merged.xml
-      - name: Print test-result folder 3
+          junitparser merge ./test-results/test_results.*.xml ./public/test_results.merged.xml
+      - name: Print public folder 2
         run: |
           ls -R public
         if: ${{ always() }}
@@ -121,12 +121,16 @@ jobs:
         if: ${{ always() }}
 
 
-  build:
+  build-docu:
     runs-on: ubuntu-latest
     needs: merge-test-results
-    if: False
     steps:
     - uses: actions/checkout@v4
+    - name: Download merged test-results
+      uses: actions/download-artifact@v4
+      with:
+        name: merged-test-results
+        path: ./docs/_static/_external_data/
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -159,14 +163,17 @@ jobs:
         path: |
           ./docs/_static/_external_data/test_results.xml
           ./docs/_static/_external_data/test_log.json
-          ./docs/_static/_external_data/pytest-logs.txt
+          ./docs/_static/_external_data/test_results.merged.xml
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
-    - name: extract data from test coverage.file
+    - name: extract data from test coverage.*.file
       run: |
         coverage xml  --data-file=./docs/_static/_external_data/coverage.file -o ./docs/_static/_external_data/coverage.xml
         coverage json --data-file=./docs/_static/_external_data/coverage.file -o ./docs/_static/_external_data/coverage.json
         coverage html --data-file=./docs/_static/_external_data/coverage.file -d ./docs/_static/_external_data/coverage_html
+        coverage xml  --data-file=./docs/_static/_external_data/coverage.merged.file -o ./docs/_static/_external_data/coverage.merged.xml
+        coverage json --data-file=./docs/_static/_external_data/coverage.merged.file -o ./docs/_static/_external_data/coverage.merged.json
+        coverage html --data-file=./docs/_static/_external_data/coverage.merged.file -d ./docs/_static/_external_data/coverage_merged_html
     - name: Archive code coverage results
       uses: actions/upload-artifact@v4
       with:
@@ -176,6 +183,10 @@ jobs:
           ./docs/_static/_external_data/coverage.xml
           ./docs/_static/_external_data/coverage.json
           ./docs/_static/_external_data/coverage_html
+          ./docs/_static/_external_data/coverage.merged.file
+          ./docs/_static/_external_data/coverage.merged.xml
+          ./docs/_static/_external_data/coverage.merged.json
+          ./docs/_static/_external_data/coverage_merged_html
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
     - name: Render the documentation
@@ -196,13 +207,12 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-docu
     if: github.ref_name == github.event.repository.default_branch
     steps:
       - name: Download documentation

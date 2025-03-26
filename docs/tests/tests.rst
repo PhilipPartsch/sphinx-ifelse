@@ -14,7 +14,7 @@ Test Results for Sphinx-IfElse
 
 The results can be found in different formats:
 
--  Representation of Test Results as Needs Elements
+-  Representation of Test Results as Needs Elements:
 
    .. test-file:: Test Results for Sphinx-IfElse
       :file: _static/_external_data/test_results.xml
@@ -53,3 +53,23 @@ The coverage results can be found in different formats:
 
 -  Machine readable coverage file:
    :download:`coverage.file </_static/_external_data/coverage.file>`
+
+
+Merged Test Results and Coverage for Sphinx-IfElse
+**************************************************
+
+The results can be found in different formats:
+
+-  Representation of Test Results as Needs Elements:
+
+   .. test-file:: Merged Test Results for Sphinx-IfElse
+      :file: _static/_external_data/test_results.xml
+      :id: TEST_Merged-Sphinx-IfElse
+      :auto_suites:
+      :auto_cases:
+
+-  Human readable coverage as html content:
+   `report.html <../_static/_external_data/coverage_merged_html/index.html>`_
+
+-  Machine readable coverage as xml file:
+   :download:`coverage.xml </_static/_external_data/coverage.merged.xml>`
