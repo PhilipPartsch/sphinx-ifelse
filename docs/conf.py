@@ -3,7 +3,10 @@
 import os
 import datetime
 
-# -- Print Versions ------------------------------------------------------
+# -- Print Versions -------------------------------------------------------
+
+import sys
+print ('python version: ' + str(sys.version))
 
 from sphinx import __version__ as sphinx_version
 print ('sphinx version: ' + str(sphinx_version))

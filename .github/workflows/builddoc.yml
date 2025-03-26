@@ -26,19 +26,9 @@ jobs:
     strategy:
       fail-fast: false  # Set on "false" to get the results of ALL builds
       matrix:
-        os: ["ubuntu-latest", ]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest",]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13",]
         sphinx-version: ["7.4", "8"]
-        include:
-          - os: "ubuntu-latest"
-            python-version: "3.9"
-            sphinx-version: "7.4"
-          - os: "windows-latest"
-            python-version: "3.9"
-            sphinx-version: "7.4"
-          - os: "windows-latest"
-            python-version: "3.13"
-            sphinx-version: "8"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -65,18 +55,14 @@ jobs:
           --report-log=./docs/_static/_external_data/test_log.json
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
-      - name: extract data from test coverage.file
-        run: |
-          coverage xml  --data-file=./docs/_static/_external_data/coverage.file -o ./docs/_static/_external_data/coverage.xml
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-report
+          name: code-coverage-report-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.sphinx-version }}
           path: |
             ./docs/_static/_external_data/test_results.xml
             ./docs/_static/_external_data/test_log.json
             ./docs/_static/_external_data/coverage.file
-            ./docs/_static/_external_data/coverage.xml
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
 
