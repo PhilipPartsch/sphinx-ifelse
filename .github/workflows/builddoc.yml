@@ -21,7 +21,7 @@ env:
 
 jobs:
   test-matrix:
-    name: "Core py${{ matrix.python-version }} sphinx~=${{ matrix.sphinx-version }} ${{ matrix.os }}"
+    name: "Test on ${{matrix.os}} with python ${{matrix.python}} sphinx~=${{matrix.sphinx}}"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false  # Set on "false" to get the results of ALL builds
@@ -93,21 +93,24 @@ jobs:
       - name: Print test-result folder
         run: |
           ls -R public
+        if: ${{ always() }}
       - name: Merge coverage files
         run: >
           coverage combine
-          --data-file=coverage.
+          --data-file=./public/coverage.file
           --keep
-          ./public
+          ./public/coverage.*.file
       - name: Print test-result folder 2
         run: |
           ls -R public
+        if: ${{ always() }}
       - name: Merge test-result xml
         run: |
           junitparser merge ./public/test_results.*.xml ./public/test_results.merged.xml
       - name: Print test-result folder 3
         run: |
           ls -R public
+        if: ${{ always() }}
       - name: Archive merged test-results
         uses: actions/upload-artifact@v4
         with:
