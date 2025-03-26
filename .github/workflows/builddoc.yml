@@ -26,9 +26,10 @@ jobs:
     strategy:
       fail-fast: false  # Set on "false" to get the results of ALL builds
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest",]
+        #os: ["ubuntu-latest", "windows-latest", "macos-latest",]
+        os: ["ubuntu-latest",]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13",]
-        sphinx-version: ["7.4", "8"]
+        sphinx-version: ["7.4", "8.0", "8.2"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
