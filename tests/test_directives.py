@@ -17,8 +17,6 @@ def test_example_project():
          outdir = build_dir,
          doctreedir = build_dir,
          buildername = "html",
-         status = statusObject,
-         warning = warningObject,
          freshenv = True,
       )
    app.build()
