@@ -89,6 +89,7 @@ jobs:
         with:
           path: public
           pattern: test-results-*
+          merge-multiple: true
       - name: Print test-result folder
         run: |
           ls -R public
