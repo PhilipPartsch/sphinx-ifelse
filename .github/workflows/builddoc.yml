@@ -98,10 +98,14 @@ jobs:
           coverage combine
           --data-file=coverage.
           --keep
+          ./public
+      - name: Print test-result folder 2
+        run: |
+          ls -R public
       - name: Merge test-result xml
         run: |
           junitparser merge ./public/test_results.*.xml ./public/test_results.merged.xml
-      - name: Print test-result folder 2
+      - name: Print test-result folder 3
         run: |
           ls -R public
       - name: Archive merged test-results
