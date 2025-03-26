@@ -28,49 +28,95 @@ jobs:
       matrix:
         #os: ["ubuntu-latest", "windows-latest", "macos-latest",]
         os: ["ubuntu-latest",]
-        python-version: ["3.10", "3.11", "3.12", "3.13",]
-        sphinx-version: ["7.4", "8.0", "8.1", "8.2"]
+        python: ["3.10", "3.11", "3.12", "3.13",]
+        sphinx: ["7.4", "8.0", "8.1", "8.2"]
         exclude:
-        - python-version: "3.10"
-          sphinx-version: "8.2"
+        - python: "3.10"
+          sphinx: "8.2"
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python }}
       - name: print versions for debugging
         run: python --version ; pip --version ; whoami
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install setuptools
-          python -m pip install sphinx~=${{ matrix.sphinx-version }}
+          python -m pip install sphinx~=${{ matrix.sphinx }}
           python -m pip install -r ./tests/requirements.txt
           python -m pip install .
       - name: Test with pytest
         run: >
           coverage run
           --branch
-          --data-file=./public/coverage.file
+          --data-file=./public/coverage.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.file
           -m pytest
           ./tests/
-          --junitxml=./public/test_results.xml
-          --report-log=./public/test_log.json
+          --junitxml=./public/test_results.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.xml
+          --report-log=./public/test_log.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.json
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-report-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.sphinx-version }}
+          name: test-results-${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}
           path: |
             ./public
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
 
-  build:
+  merge-test-results:
     runs-on: ubuntu-latest
     needs: test-matrix
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3"
+      - name: print versions for debugging
+        run: python --version ; pip --version ; whoami
+      - name: Install dependencies
+        run: |
+          python -m pip install junitparser
+          python -m pip install coverage
+          junitparser --version
+          coverage --version
+      - name: Download test-results
+        uses: actions/download-artifact@v4
+        with:
+          path: public
+          pattern: test-results-*
+      - name: Print test-result folder
+        run: |
+          ls -R public
+      - name: Merge coverage files
+        run: >
+          coverage combine
+          --data-file=coverage.
+          --keep
+      - name: Merge test-result xml
+        run: |
+          junitparser merge ./public/test_results.*.xml ./public/test_results.merged.xml
+      - name: Print test-result folder 2
+        run: |
+          ls -R public
+      - name: Archive merged test-results
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-test-results
+          path: |
+            ./public
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
+
+
+  build:
+    runs-on: ubuntu-latest
+    needs: merge-test-results
+    if: False
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
