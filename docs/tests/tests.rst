@@ -63,7 +63,7 @@ The results can be found in different formats:
 -  Representation of Test Results as Needs Elements:
 
    .. test-file:: Merged Test Results for Sphinx-IfElse
-      :file: _static/_external_data/test_results.xml
+      :file: _static/_external_data/test_results.merged.xml
       :id: TEST_Merged-Sphinx-IfElse
       :auto_suites:
       :auto_cases:
