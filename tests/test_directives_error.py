@@ -1,7 +1,5 @@
-
 import os
 import pytest
-from io import StringIO
 import sphinx
 
 pytest_plugins = 'sphinx.testing.fixtures'
@@ -49,12 +47,12 @@ def test_error_project(app, status, warning,):
 
    # Verify expected warnings occuring
    warnings = warning.getvalue().strip()
-   assert "/index.rst:1: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
-   assert "/index.rst:12: WARNING: IfDirective: exception while evaluating expression: name 'a' is not defined" in warnings
-   assert '/index.rst:19: ERROR: Error in "if" directive:' in warnings
-   assert "/index.rst:33: WARNING: ElIfDirective: exception while evaluating expression: name 'a' is not defined" in warnings
-   assert '/index.rst:44: ERROR: Error in "elif" directive:' in warnings
-   assert "/index.rst:52: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
-   assert "/index.rst:59: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
-   assert "/index.rst:69: WARNING: ElseDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
+   assert "index.rst:1: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
+   assert "index.rst:12: WARNING: IfDirective: exception while evaluating expression: name 'a' is not defined" in warnings
+   assert 'index.rst:19: ERROR: Error in "if" directive:' in warnings
+   assert "index.rst:33: WARNING: ElIfDirective: exception while evaluating expression: name 'a' is not defined" in warnings
+   assert 'index.rst:44: ERROR: Error in "elif" directive:' in warnings
+   assert "index.rst:52: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
+   assert "index.rst:59: WARNING: ElIfDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
+   assert "index.rst:69: WARNING: ElseDirective: without a preceding IfDirective or ElIfDirective. Maybe there is something wrong with the intendition." in warnings
 
