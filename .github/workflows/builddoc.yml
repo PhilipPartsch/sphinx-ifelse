@@ -29,7 +29,7 @@ jobs:
         #os: ["ubuntu-latest", "windows-latest", "macos-latest",]
         os: ["ubuntu-latest",]
         python-version: ["3.10", "3.11", "3.12", "3.13",]
-        sphinx-version: ["7.4", "8.0", "8.2"]
+        sphinx-version: ["7.4", "8.0", "8.1", "8.2"]
         exclude:
         - python-version: "3.10"
           sphinx-version: "8.2"
@@ -52,11 +52,11 @@ jobs:
         run: >
           coverage run
           --branch
-          --data-file=./docs/_static/_external_data/coverage.file
+          --data-file=./public/coverage.file
           -m pytest
           ./tests/
-          --junitxml=./docs/_static/_external_data/test_results.xml
-          --report-log=./docs/_static/_external_data/test_log.json
+          --junitxml=./public/test_results.xml
+          --report-log=./public/test_log.json
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
       - name: Archive code coverage results
@@ -64,9 +64,7 @@ jobs:
         with:
           name: code-coverage-report-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.sphinx-version }}
           path: |
-            ./docs/_static/_external_data/test_results.xml
-            ./docs/_static/_external_data/test_log.json
-            ./docs/_static/_external_data/coverage.file
+            ./public
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
 
