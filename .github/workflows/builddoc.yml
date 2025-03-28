@@ -56,6 +56,7 @@ jobs:
           --data-file=./public/coverage.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.file
           -m pytest
           ./tests/
+          -o junit_suite_name=pytest-${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}
           --junitxml=./public/test_results.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.xml
           --report-log=./public/test_log.${{matrix.os}}-${{matrix.python}}-${{matrix.sphinx}}.json
         # Use always() to always run this step to publish test results when there are test failures
