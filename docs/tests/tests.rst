@@ -68,8 +68,10 @@ The results can be found in different formats:
       :auto_suites:
       :auto_cases:
 
--  Human readable coverage as html content:
-   `report.html <../_static/_external_data/coverage_merged_html/index.html>`_
+.. todo
 
--  Machine readable coverage as xml file:
-   :download:`coverage.xml </_static/_external_data/coverage.merged.xml>`
+   -  Human readable coverage as html content:
+      `report.html <../_static/_external_data/coverage_merged_html/index.html>`_
+
+   -  Machine readable coverage as xml file:
+      :download:`coverage.xml </_static/_external_data/coverage.merged.xml>`

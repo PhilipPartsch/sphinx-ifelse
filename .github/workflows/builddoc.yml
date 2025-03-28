@@ -166,11 +166,14 @@ jobs:
           ./docs/_static/_external_data/test_results.merged.xml
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
-    - name: extract data from test coverage.*.file
+    - name: extract data from test coverage.file
       run: |
         coverage xml  --data-file=./docs/_static/_external_data/coverage.file -o ./docs/_static/_external_data/coverage.xml
         coverage json --data-file=./docs/_static/_external_data/coverage.file -o ./docs/_static/_external_data/coverage.json
         coverage html --data-file=./docs/_static/_external_data/coverage.file -d ./docs/_static/_external_data/coverage_html
+    - name: extract data from test coverage.*.file
+      if: False
+      run: |
         coverage xml  --data-file=./docs/_static/_external_data/coverage.merged.file -o ./docs/_static/_external_data/coverage.merged.xml
         coverage json --data-file=./docs/_static/_external_data/coverage.merged.file -o ./docs/_static/_external_data/coverage.merged.json
         coverage html --data-file=./docs/_static/_external_data/coverage.merged.file -d ./docs/_static/_external_data/coverage_merged_html
