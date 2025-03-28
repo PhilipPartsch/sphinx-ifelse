@@ -29,7 +29,12 @@ requires-python = ">=3.10,<4"
 dependencies = [
   "sphinx>=7.4,<9",
 ]
+
 [tool.pytest.ini_options]
 markers = [
-    "sphinx: sphinx https://github.com/sphinx-doc/sphinx/blob/master/sphinx/testing/fixtures.py",
+    "sphinx: sphinx see https://github.com/sphinx-doc/sphinx/blob/master/sphinx/testing/fixtures.py",
 ]
+
+[tool.coverage.run]
+#see: https://coverage.readthedocs.io/en/7.7.1/config.html#run-relative-files
+relative_files = true
