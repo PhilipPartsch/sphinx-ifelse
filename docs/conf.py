@@ -57,3 +57,8 @@ ifelse_variants = {
 # -- extension configuration: sphinx-needs
 
 needs_build_json = True
+
+# -- extension configuration: sphinxcontrib.test_reports
+
+tr_suite_id_length = 6
+tr_case_id_length = 10
